@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2D breakout game using Phaser</title>
+    <link rel="stylesheet" href="/css/basis.css">
+    <script src="/lib/phaser.min.js"></script>
+
+</head>
+<body>
+<script>
+    //VARIABLES
+    var game = new Phaser.Game(480,320,Phaser.AUTO,null, {
+       preload: preload, create: create, update: update
+    });
+    var ball;
+    var paddle;
+
+    //FUNCTIONS
+    function preload() {
+        game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; //keep the aspect ratio
+        game.scale.pageAlignHorizontally = true;
+        game.scale.pageAlignVertically = true;
+        game.stage.backgroundColor = "#eeffdd";
+        game.load.image('ball','/images/ball.png');  //Load the ball image
+        game.load.image('paddle', '/images/paddle.png');  //Load the paddle image
+    }
+    function create() {
+        //initialize the Arcade Physics engine
+        game.physics.startSystem(Phaser.Physics.arcade);
+        ball = game.add.sprite(game.world.width*0.5,game.world.height-25,'ball'); //the ball object
+        ball.anchor.set(0.5);
+        game.physics.enable(ball,Phaser.Physics.arcade);
+        ball.body.collideWorldBounds = true;
+        ball.body.bounce.set(1);
+        ball.body.velocity.set(150,-150);
+        paddle = game.add.sprite(game.world.width*0.5,game.world.height-5,'paddle');  //the paddle object
+        paddle.anchor.set(0.5,1);
+        game.physics.enable(paddle,Phaser.Physics.arcade);
+        paddle.body.immovable = true;
+    }
+    function update() {
+        game.physics.arcade.collide(ball,paddle);
+        paddle.x = game.input.x || game.world.width*0.5;
+    }
+</script>
+</body>
+</html>
